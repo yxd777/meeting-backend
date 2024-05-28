@@ -1,0 +1,39 @@
+services:
+  # fe-app:
+  #   image: registry.cn-qingdao.aliyuncs.com/guang_guang/guang:aaa
+  #   ports:
+  #     - 80:80
+  #   depends_on:
+  #     - nest-app
+  #   networks:
+  #     - common-network
+
+  mysql-container:
+    image: mysql
+    volumes:
+      - /Users/yxd/WorkSpace/2024/Mooc-react-guang/docker-mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: meeting_room_booking_system
+      MYSQL_ROOT_PASSWORD: ad233
+    networks:
+      - common-network
+  redis-container:
+    image: redis
+    volumes:
+      - /Users/yxd/WorkSpace/2024/Mooc-react-guang/docker-redis:/data
+    networks:
+      - common-network
+  nest-app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    ports:
+      - 3005:3005
+    depends_on:
+      - mysql-container
+      - redis-container
+    networks:
+      - common-network
+networks:
+  common-network:
+    driver: bridge
